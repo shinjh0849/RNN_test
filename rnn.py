@@ -20,22 +20,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
 from sklearn.metrics import accuracy_score
 
-# def f1_score(y_true, y_pred):
-# 	y_pred = np.round(y_pred)
-# 	print(y_true.shape)
-# 	print(y_pred.shape)
-# 	print(y_true)
-# 	print(y_pred)
 
-# 	TP = tf.count_nonzero(y_true * y_pred)
-# 	TN = tf.count_nonzero((y_true-1) * (y_pred-1))
-# 	FP = tf.count_nonzero((y_true-1) * y_pred)
-# 	FN = tf.count_nonzero(y_true * (y_pred-1))
-
-# 	precision = TP / (TP + FP)
-# 	recall = TP / (TP + FN)
-# 	f1 = 2 * precision * recall / (precision + recall)
-# 	return f1
 
 # convert series to supervised learning
 def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
@@ -95,7 +80,7 @@ values_train = values_train.astype('float32')
 scaler_train = MinMaxScaler(feature_range=(0,1))
 scaled_train = scaler_train.fit_transform(values_train)
 reframed_train = series_to_supervised(scaled_train, 1, 1)
-reframed_train.drop(reframed_train.columns[[1]], axis=1, inplace=True)
+reframed_train.drop(reframed_train.columns[[0]], axis=1, inplace=True)
 
 values_test = testset.values
 encoder_test = LabelEncoder()
@@ -158,6 +143,9 @@ yhat_test = model.predict(test_X)
 yhat_test = np.round(yhat_test)
 
 DataFrame(yhat_test).to_csv('prediction.csv')
+
+print('num of 0: ', (DataFrame(yhat_test)[[0]]==0).sum())
+print('num of 1: ', (DataFrame(yhat_test)[[0]]==1).sum())
 
 
 # plotting the dataset
